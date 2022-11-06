@@ -120,7 +120,9 @@ WITH dexs AS
         AND tx.block_number >= {{query_start_block_number}}
         AND tx.block_number < {{query_end_block_number}}
     LEFT JOIN {{ ref('tokens_erc20') }} erc20a ON erc20a.contract_address = udexs.token_a_address
+        AND erc20a.blockchain = 'ethereum'
     LEFT JOIN {{ ref('tokens_erc20') }} erc20b ON erc20b.contract_address = udexs.token_b_address
+        AND erc20b.blockchain = 'ethereum'
     LEFT JOIN {{ source('prices', 'usd') }} pa ON pa.minute = date_trunc('minute', udexs.block_time)
         AND pa.contract_address = udexs.token_a_address
         {% if not is_incremental() %}
